@@ -1,23 +1,54 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import { CSVLink } from 'react-csv';
+import RekeyForm from './components/RekeyForm.js';
+import Output from './components/Output';
 
 function App() {
+  const [rekeyState, setRekeyState] = useState({
+    ref: '',
+    date: '',
+    auth: '',
+    four: '',
+    amount: '',
+    tip: '',
+  });
+
+  const headers = [
+    { label: 'Ref#', key: 'ref' },
+    { label: 'Date', key: 'date' },
+    { label: 'Auth Code', key: 'auth' },
+    { label: 'Last 4', key: 'four' },
+    { label: 'Amount', key: 'amount' },
+    { label: 'Tip', key: 'tip' },
+  ];
+
+  let transactionList = [];
+
+  const updateList = (formData) => {
+    transactionList.push(formData);
+    console.log(transactionList);
+  };
+
+  const updateRekeyState = (formData) => {
+    setRekeyState(formData);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App flex h-screen bg-amber-400'>
+      <div className='w-full my-auto'>
+        <Output formData={rekeyState} />
+        <RekeyForm
+          formState={rekeyState}
+          updateFormState={setRekeyState}
+          updateList={updateList}
+        />
+      </div>
+      <div className='h-full'>
+        {transactionList.map((x) => {
+          return <Output formData={x} />;
+        })}
+      </div>
     </div>
   );
 }
